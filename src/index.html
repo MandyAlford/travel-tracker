@@ -3,24 +3,29 @@
   <head>
     <meta charset="UTF-8" content="width=device-width, initial-scale=1" name="viewport" />
     <meta name="Description" content="Travel Tracking App"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800&display=swap' rel='stylesheet'>
     <title>Travel Tracker</title>
   </head>
   <body>
     <header class='main-header'>
       <h1>Activity Tracker</h1>
-
-      <img src="./images/turing-logo.png" alt="turing logo" height="100px" width="100px">
    </header>
+   <aside class='user-login'>
+     <h2>Sign in to access your account</h2>
+     <input id='user-name' aria-label='enter user name here' class='login' type='text' name='user' value='user'>
+     <label for='user-name'>User Name:</label>
+     <input id='user-password' aria-label='enter password here' class='password' type='password' name='password' value='password'>
+     <label for='user-password'>User Password:</label>
+     <button id='login-button' class='button' type='submit'></button>
+     <label for='login-button'>Click here to log in</label>
+     <p id='log-in-error' class='hidden'>Please enter a valid user name and password</p>
+   </aside>
    <main>
-     <section class='user-login'>
-       <input id='user-name' class='login' type='text' name='user' value='user'>
-       <label for='user-name'>User Name</label>
-       <input id='user-password' class='password' type='text' name='password' value='password'>
-       <label for='user-password'>User Password</label>
-       <button id='login-button' class='button'</button> 
-    </section>
-    <section>
-    </section>
+     <section class='account-view'>
+     </section>
+     <section class='request-trip'>
+     </section>
+   </main>
     <!-- Do not include the index.js or main.bundle.js file here - it is done automatically by the webpack server -->
   </body>
 </html>
