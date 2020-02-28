@@ -10,7 +10,6 @@ import Traveler from './traveler';
 
 import $ from 'jquery';
 import './css/base.scss';
-import './mixins.scss';
 
 import './images/turing-logo.png'
 
