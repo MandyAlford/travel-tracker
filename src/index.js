@@ -14,3 +14,18 @@ import './css/base.scss';
 import './images/turing-logo.png'
 
 console.log('This is the JavaScript entry file - your code begins here.');
+
+// for event listeners
+let userName = $('#user-name')
+let userPassword = $('#user-password')
+let loginButton = $('#login-button')
+
+loginButton.on('click', (event) => {
+  if (userName.val() === 'agency' && userPassword.val() === 'travel2020') {
+    console.log('an agent logged in')
+  } else if (userName.val() === 'traveler50' && userPassword.val() === 'travel2020') {
+    console.log('a traveler logged in')
+  } else {
+    console.log('error')
+  }
+})
