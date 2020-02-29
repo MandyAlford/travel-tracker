@@ -13,15 +13,14 @@ let domUpdates = {
     Promise.all([this.getTravelerData(), this.getTripsData(), this.getDestinationsData()])
       .then(data => {
         this.greetUser(data[0])
-        const instantiatedObjects = this.instantiateObjects(data)
-        const traveler = instantiatedObjects[0]
-        const trips = instantiatedObjects[1]
-        this.displayTrips(trips);
+        const traveler = this.instantiateTraveler(data)
+        this.displayTrips(traveler.trips);
+        this.displayCost(traveler.trips)''
       })
       // .catch(error => console.log(error.message));
   },
 
-  instantiateObjects(data) {
+  instantiateTraveler(data) {
     const travelerData = data[0];
     const tripsData = data[1];
     const destinationsData = data[2];
@@ -39,7 +38,7 @@ let domUpdates = {
     })
     travelerData.trips = trips
     let traveler = new Traveler(travelerData)
-    return [traveler, trips];
+    return traveler;
   },
 
   getTravelerData() {
@@ -73,6 +72,10 @@ let domUpdates = {
     }).join('')
     tripsHeader.toggleClass('hidden');
     tripsStatus.html(tripsToDisplay)
+  },
+
+  displayCost(trips) {
+    
   },
 
   // getTripDisplayData(tripsData, destinationsData) {
