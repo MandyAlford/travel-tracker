@@ -7,6 +7,8 @@ let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');
 let tripsStatus = $('#trips-status');
 let tripsHeader = $('#trips-header');
+let spendHeader = $('#spend-header');
+let totalSpend = $('#total-spend');
 
 let domUpdates = {
   displayTravelerInfo() {
@@ -15,7 +17,7 @@ let domUpdates = {
         this.greetUser(data[0])
         const traveler = this.instantiateTraveler(data)
         this.displayTrips(traveler.trips);
-        this.displayCost(traveler.trips);
+        this.displayCost(traveler);
       })
       // .catch(error => console.log(error.message));
   },
@@ -74,8 +76,9 @@ let domUpdates = {
     tripsStatus.html(tripsToDisplay)
   },
 
-  displayCost(trips) {
-
+  displayCost(traveler) {
+    spendHeader.toggleClass('hidden');
+    totalSpend.html(`\$ ${traveler.calculateTotalTripsCost()}`);
   },
 
   // getTripDisplayData(tripsData, destinationsData) {
