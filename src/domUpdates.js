@@ -46,11 +46,12 @@ let domUpdates = {
   },
 
   displayTrips(tripsData, destinationsData) {
-    let displayData = getTripDisplayData(tripsData, destinationsData);
+    let displayData = this.getTripDisplayData(tripsData, destinationsData);
 
-    displayData.forEach((tripData) => {
-      
-    })
+    let tripsToDisplay = displayData.map((tripData) => {
+      return `<li>${tripData.destination} - ${tripData.status}</li>`
+    }).join('')
+    summaryView.html(tripsToDisplay)
   },
 
   getTripDisplayData(tripsData, destinationsData) {
