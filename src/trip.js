@@ -10,7 +10,9 @@ class Trip {
     this.suggestedActivities = tripsData.suggestedActivities;
     this.destination = tripsData.destination;
   }
-
+  calculateTripCost() {
+    return ((this.travelers * this.destination.estimatedFlightCostPerPerson) + (this.duration * this.destination.estimatedLodgingCostPerDay))
+  }
 }
 
 export default Trip;
