@@ -6,7 +6,7 @@ class Traveler extends User {
     this.id = usersData.id;
     this.name = usersData.name;
     this.travelerType = usersData.travelerType;
-    this.trips = [];
+    this.trips = usersData.trips;
   }
 }
 

@@ -8,6 +8,7 @@ class Trip {
     this.duration = tripsData.duration;
     this.status = tripsData.status;
     this.suggestedActivities = tripsData.suggestedActivities;
+    this.destination = tripsData.destination;
   }
 
 }
