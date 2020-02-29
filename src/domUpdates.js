@@ -15,7 +15,7 @@ let domUpdates = {
         this.greetUser(data[0])
         const traveler = this.instantiateTraveler(data)
         this.displayTrips(traveler.trips);
-        this.displayCost(traveler.trips)''
+        this.displayCost(traveler.trips);
       })
       // .catch(error => console.log(error.message));
   },
@@ -75,7 +75,7 @@ let domUpdates = {
   },
 
   displayCost(trips) {
-    
+
   },
 
   // getTripDisplayData(tripsData, destinationsData) {
