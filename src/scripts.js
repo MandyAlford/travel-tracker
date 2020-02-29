@@ -1,4 +1,3 @@
-
 let usersData = fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers')
   .then(response => response.json())
   .then(data => data.travelers)
