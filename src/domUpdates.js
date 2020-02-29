@@ -1,10 +1,13 @@
 import $ from 'jquery';
 
 let summaryView = $('#summary-view');
+let userGreeting = $('#user-greeting');
+let tripsStatus = $('#trips-status');
+let tripsHeader = $('#trips-header');
 
 let domUpdates = {
   greetUser(data) {
-    summaryView.html(`Welcome, ${data.name}!!!`)
+    userGreeting.html(`Welcome, ${data.name}!!!`)
   },
 
   displayTravelerInfo() {
@@ -26,7 +29,7 @@ let domUpdates = {
       .then(data => {
         let tripsData = data[0];
         let destinationsData = data[1];
-        this.displayTrips(tripsData, destinationsData)
+        this.displayTrips(tripsData, destinationsData);
       })
       .catch(error => console.log(error.message));
   },
@@ -51,7 +54,8 @@ let domUpdates = {
     let tripsToDisplay = displayData.map((tripData) => {
       return `<li>${tripData.destination} - ${tripData.status}</li>`
     }).join('')
-    summaryView.html(tripsToDisplay)
+    tripsHeader.toggleClass('hidden');
+    tripsStatus.html(tripsToDisplay)
   },
 
   getTripDisplayData(tripsData, destinationsData) {
@@ -65,7 +69,7 @@ let domUpdates = {
       return {destination: destinationName, status: trip.status}
     })
     return user50Destinations;
-  }
+  },
 };
 
 export default domUpdates;
