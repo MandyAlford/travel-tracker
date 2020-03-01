@@ -10,7 +10,10 @@ let tripsHeader = $('#trips-header');
 let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 
+tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
+
 let domUpdates = {
+
   displayTravelerInfo() {
     Promise.all([this.getTravelerData(), this.getTripsData(), this.getDestinationsData()])
       .then(data => {
@@ -101,7 +104,7 @@ let domUpdates = {
       return `<li>${trip.destination.destination} - ${trip.status}</li>`
     }).join('')
     tripsHeader.toggleClass('hidden');
-    tripsStatus.html(tripsToDisplay)
+    tripsStatus.html(tripsToDisplay);
   },
 
   displayAllPendingTrips(allTravelers) {
@@ -122,17 +125,17 @@ let domUpdates = {
     tripsStatus.html(allPendingTripHtml);
     //toggle hidden class
     //insert into html
-    // tripstatus.on('click', (event) => this.updateTripStatus());
+// debugger
 
   },
 
-  // updateTripStatus(event) {
-  //   if(event.target.hasClass('approve-trip')) {
-  //     console.log('approve!')
-  //   } else if (event.target.hasClass('deny-trip')) {
-  //     console.log('deny!')
-  //   }
-  // }
+  updateTripStatus(event) {
+    if($(event.target).hasClass('approve-trip')) {
+      console.log('approve!')
+    } else if ($(event.target).hasClass('deny-trip')) {
+      console.log('deny!')
+    }
+  },
   // getAllTravelersWithPendingTrips(allTravelers) {
   //   return allTravelers.filter((traveler) => {
   //     return traveler.findAllPendingTrips().length > 0
