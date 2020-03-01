@@ -62,7 +62,7 @@ describe('Traveler', function() {
   })
 
   it('should be a function', function() {
-    expect(true).to.equal(true);
+    expect(Traveler).to.be.a('function');
   });
 
   it('should be able to calculate total money spent on all trips including agent fees', function() {
