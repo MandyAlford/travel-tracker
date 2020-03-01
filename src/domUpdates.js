@@ -106,16 +106,38 @@ let domUpdates = {
 
   displayAllPendingTrips(allTravelers) {
     // get all pending trips
+    // const allTravelersWithPendingTrips = this.getAllTravelersWithPendingTrips(allTravelers)
     //generate html elements
+    const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
+      const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
+        if (trip.status === 'pending') {
+          const listElement = `<li>${traveler.name} - ${trip.destination.destination} - ${trip.status} <button class='approve-trip' type='button'>Approve</button><button class='deny-trip' type='button'>Deny</button></li>`
+          acc2 += listElement
+        }
+        return acc2
+      }, '')
+      acc1 += allTripDataForTraveler
+      return acc1
+    }, '')
+    tripsStatus.html(allPendingTripHtml);
     //toggle hidden class
     //insert into html
-    const allPendingTripData = this.getAllPendingTrips(allTravelers)
+    // tripstatus.on('click', (event) => this.updateTripStatus());
 
   },
 
-  getAllPendingTrips(allTravelers) {
-
-  },
+  // updateTripStatus(event) {
+  //   if(event.target.hasClass('approve-trip')) {
+  //     console.log('approve!')
+  //   } else if (event.target.hasClass('deny-trip')) {
+  //     console.log('deny!')
+  //   }
+  // }
+  // getAllTravelersWithPendingTrips(allTravelers) {
+  //   return allTravelers.filter((traveler) => {
+  //     return traveler.findAllPendingTrips().length > 0
+  //   })
+  // },
 
   displayCost(traveler) {
     spendHeader.toggleClass('hidden');
