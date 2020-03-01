@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Traveler from './traveler';
 import Trip from './trip';
 import Destination from './destination';
+import Agent from '../src/agent'
 
 let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');
@@ -39,6 +40,9 @@ let domUpdates = {
           return this.instantiateTraveler(travelerData, tripsData, destinationsData)
         })
         this.displayAllPendingTrips(allTravelers);
+        // debugger
+        const agent = new Agent(allTravelers)
+        totalSpend.text(`$${Math.round(agent.getRevenue())}`);
       })
   },
 
@@ -94,9 +98,14 @@ let domUpdates = {
 
   greetAgent() {
     userGreeting.html(`Welcome, Agent!!!`);
+    this.updateAgentDashBoardHeaders();
+  },
+
+  updateAgentDashBoardHeaders() {
     tripsHeader.text(`Trips pending Approval:`);
     tripsHeader.toggleClass('hidden');
     spendHeader.toggleClass('hidden');
+    spendHeader.text(`Your revenue this year:`);
   },
 
   displayTrips(trips) {
