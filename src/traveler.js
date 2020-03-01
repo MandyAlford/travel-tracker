@@ -8,6 +8,7 @@ class Traveler extends User {
     this.travelerType = usersData.travelerType;
     this.trips = usersData.trips;
   }
+
   calculateTotalTripsCost() {
     let tripsSubtotal = this.trips.map((trip) => {
       return trip.calculateTripCost();
@@ -16,6 +17,12 @@ class Traveler extends User {
       return acc;
     }, 0)
     return tripsSubtotal* 1.10;
+  }
+
+  findAllPendingTrips() {
+    return this.trips.filter((trip) => {
+      return trip.status === 'pending'
+    })
   }
 }
 
