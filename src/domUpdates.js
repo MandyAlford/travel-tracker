@@ -11,6 +11,7 @@ let tripsStatus = $('#trips-status');
 let tripsHeader = $('#trips-header');
 let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
+let todaysTravelers = $('#todays-travelers');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
 
@@ -33,7 +34,7 @@ let domUpdates = {
   displayAgentInfo() {
     Promise.all([this.getAllTravelersData(), this.getTripsData(), this.getDestinationsData()])
       .then(data => {
-        this.greetAgent();
+
         const allTravelersData = data[0];
         const tripsData = data[1];
         const destinationsData = data[2];
@@ -44,6 +45,8 @@ let domUpdates = {
         // debugger
         const agent = new Agent(allTravelers)
         totalSpend.text(`$${Math.round(agent.getRevenue())}`);
+        const todaysTravelerCount = agent.getTodaysTravelers();
+          this.greetAgent(todaysTravelerCount);
       })
   },
 
@@ -97,16 +100,17 @@ let domUpdates = {
     userGreeting.html(`Welcome, ${data.name}!!!`)
   },
 
-  greetAgent() {
+  greetAgent(todaysTravelerCount) {
     userGreeting.html(`Welcome, Agent!!!`);
-    this.updateAgentDashBoardHeaders();
+    this.updateAgentDashBoardHeaders(todaysTravelerCount);
   },
 
-  updateAgentDashBoardHeaders() {
+  updateAgentDashBoardHeaders(todaysTravelerCount) {
     tripsHeader.text(`Trips pending Approval:`);
     tripsHeader.toggleClass('hidden');
     spendHeader.toggleClass('hidden');
     spendHeader.text(`Your revenue this year:`);
+    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`)
   },
 
   displayTrips(trips) {
