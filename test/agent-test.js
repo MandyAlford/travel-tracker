@@ -104,4 +104,9 @@ describe('Agent', function() {
    trip1.date = moment().format('YYYY/MM/DD');
    expect(agent.getTodaysTravelers()).to.equal(2);
  });
+
+ it('should know how many travelers are on trips today, including trips that started before today and include it in duration', function() {
+   trip1.date = moment().subtract(1, 'days').format('YYYY/MM/DD');
+   expect(agent.getTodaysTravelers()).to.equal(2);
+ });
 })
