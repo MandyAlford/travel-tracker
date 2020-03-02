@@ -4,7 +4,7 @@ const expect = chai.expect;
 import Trip from '../src/trip'
 import Traveler from '../src/traveler'
 import Agent from '../src/agent'
-
+import * as moment from 'moment'
 
 let trip1;
 let trip2;
@@ -98,5 +98,10 @@ describe('Agent', function() {
    traveler.trips = [trip1, trip2, trip3];
 
    expect(agent.getRevenue(traveler.trips)).to.equal(130);
- })
+ });
+
+ it('should know how many travelers are on trips today', function() {
+   trip1.date = moment().format('YYYY/MM/DD');
+   expect(agent.getTodaysTravelers()).to.equal(2);
+ });
 })

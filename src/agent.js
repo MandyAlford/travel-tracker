@@ -20,6 +20,18 @@ class Agent extends User {
     }, 0)
     return totalTripsCost * .1;
   }
+  getTodaysTravelers() {
+    let todaysTravelers = this.travelersInfo.reduce((acc, traveler) => {
+      const today = moment().format('YYYY/MM/DD');
+      traveler.trips.forEach((trip) => {
+        if(trip.date === today) {
+          acc += trip.travelers;
+        }
+      })
+      return acc;
+    }, 0)
+    return todaysTravelers;
+  }
 }
 
 export default Agent;
