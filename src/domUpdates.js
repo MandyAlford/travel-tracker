@@ -12,6 +12,7 @@ let tripsHeader = $('#trips-header');
 let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 let todaysTravelers = $('#todays-travelers');
+let requestTrip = $('#request-trip');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
 
@@ -27,6 +28,7 @@ let domUpdates = {
         const traveler = this.instantiateTraveler(travelerData, tripsData, destinationsData)
         this.displayTrips(traveler.trips);
         this.displayCost(traveler);
+        this.displayTripBookingForm(destinationsData);
       })
       // .catch(error => console.log(error.message));
   },
@@ -122,9 +124,6 @@ let domUpdates = {
   },
 
   displayAllPendingTrips(allTravelers) {
-    // get all pending trips
-    // const allTravelersWithPendingTrips = this.getAllTravelersWithPendingTrips(allTravelers)
-    //generate html elements
     const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
       const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
         if (trip.status === 'pending') {
@@ -137,10 +136,6 @@ let domUpdates = {
       return acc1
     }, '')
     tripsStatus.html(allPendingTripHtml);
-    //toggle hidden class
-    //insert into html
-// debugger
-
   },
 
   updateTripStatus(event) {
@@ -150,29 +145,40 @@ let domUpdates = {
       console.log('deny!')
     }
   },
-  // getAllTravelersWithPendingTrips(allTravelers) {
-  //   return allTravelers.filter((traveler) => {
-  //     return traveler.findAllPendingTrips().length > 0
-  //   })
-  // },
 
   displayCost(traveler) {
     spendHeader.toggleClass('hidden');
-    totalSpend.html(`\$ ${traveler.calculateTotalTripsCost()}`);
+    totalSpend.html(`\$ ${Math.round(traveler.calculateTotalTripsCost())}`);
   },
 
-  // getTripDisplayData(tripsData, destinationsData) {
-  //   let user50Trips = tripsData.filter((trip) => {
-  //     return trip.userID === 50
-  //   })
-  //   let user50Destinations = user50Trips.map((trip) => {
-  //     let destinationName = destinationsData.find((destination) => {
-  //       return trip.destinationID === destination.id
-  //     }).destination
-  //     return {destination: destinationName, status: trip.status}
-  //   })
-  //   return user50Destinations;
-  // },
+  displayTripBookingForm(destinationsData) {
+    debugger
+    let dropDownElement = this.getDestinationsHtml(destinationsData);
+    requestTrip.html(`<form action="trip-request" id='trip-request'>
+       <h2>Where to next?</h2>
+       <h3>Request your next trip!</h3>
+       <label for="trip-start">Choose your trip start date:</label>
+       <input type="date" id="trip-start" name="trip-start"
+              value="2020/03/02"
+              min="2020/03/02" max="2022/12/31">
+       <label for="destinations">Choose your destination:</label>
+       <select id="destinations" name="destinations">${dropDownElement}
+       </select>
+       <label for="number-of-travelers">Total number of travelers:</label>
+       <input type="number" id="number-of-travelers" name="traveler-number" min="1" max="10">
+       <button class='book-trip' type='button'>Request your trip</button>
+    </form>`);
+  },
+
+  getDestinationsHtml(destinationsData) {
+    let dropDownElement =  destinationsData.reduce((acc, destination) => {
+      acc += `<option value="${destination.id}">${destination.destination}</option>`
+        // debugger
+      return acc;
+
+    }, '')
+    return dropDownElement;
+  }
 };
 
 export default domUpdates;
