@@ -3,6 +3,7 @@ import Traveler from './traveler';
 import Trip from './trip';
 import Destination from './destination';
 import Agent from '../src/agent'
+import moment from 'moment'
 
 let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');

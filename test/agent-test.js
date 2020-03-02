@@ -19,7 +19,7 @@ describe('Agent', function() {
      "userID": 1,
      "destinationID": 49,
      "travelers": 2,
-     "date": "2019/09/16",
+     "date": "2018/09/16",
      "duration": 4,
      "status": "pending",
      "suggestedActivities": [],
@@ -71,6 +71,32 @@ describe('Agent', function() {
  });
 
  it('should be able to calculate revenue for the last year', function() {
-   expect(agent.getRevenue(traveler.trips)).to.equal(238);
+   expect(agent.getRevenue(traveler.trips)).to.equal(130);
+ });
+
+ it('should not include revenue for trips in the future', function() {
+   let trip3 = new Trip({
+    "id": 1,
+    "userID": 1,
+    "destinationID": 50,
+    "travelers": 3,
+    "date": "2020/09/16",
+    "duration": 8,
+    "status": "approved",
+    "suggestedActivities": [],
+    "destination":
+       {
+       "id": 50,
+       "destination": "Lima, Peru",
+       "estimatedLodgingCostPerDay": 50,
+       "estimatedFlightCostPerPerson": 300,
+       "image": "https://images.unsplash.com/photo-1489171084589-9b5031ebcf9b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2089&q=80",
+       "alt": "overview of city buildings with a clear sky"
+       }
+   })
+
+   traveler.trips = [trip1, trip2, trip3];
+
+   expect(agent.getRevenue(traveler.trips)).to.equal(130);
  })
 })
