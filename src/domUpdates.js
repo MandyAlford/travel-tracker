@@ -29,11 +29,11 @@ let domUpdates = {
         this.greetUser(data[0])
         const travelerData = data[0];
         const tripsData = data[1];
-        const destinationsData = data[2];
-        const traveler = this.instantiateTraveler(travelerData, tripsData, destinationsData)
+        this.destinationsData = data[2];
+        const traveler = this.instantiateTraveler(travelerData, tripsData, this.destinationsData)
         this.displayTrips(traveler.trips);
         this.displayCost(traveler);
-        this.displayTripBookingForm(destinationsData);
+        this.displayTripBookingForm(this.destinationsData);
         $('.book-trip').on('click', (event) => this.makeTripRequest(event));
       })
       // .catch(error => console.log(error.message));
@@ -174,10 +174,43 @@ let domUpdates = {
         <label for="trip-durations">Trip duration:</label>
         <input type="number" id="trip-duration" name="duration" min="1" max="10">
        <button class='book-trip' type='button'>Request your trip</button>
-    </form>`);
+    </form>
+    <section id="cost-estimate"></section>`);
 
-    this.displayDestinationPicture(destinationsData);
+    $('#destinations').on('change', this.calculateTripCost.bind(this));
+    $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
+    $('#trip-durations').on('change', this.calculateTripCost.bind(this));
+    // this.displayDestinationPicture(destinationsData);
   },
+
+  calculateTripCost(event) {
+    let destinationId = parseInt($('#destinations').val());
+    let destinationInformation = this.destinationsData.find((destination) => {
+      return destination.id === destinationId
+    })
+
+    let trip = new Trip(
+      {
+        destination: {
+          estimatedFlightCostPerPerson: destinationInformation.estimatedFlightCostPerPerson,
+          estimatedLodgingCostPerDay: destinationInformation.estimatedLodgingCostPerDay,
+        },
+        travelers: parseInt($('#number-of-travelers').val()),
+        duration: parseInt($('#trip-duration').val()),
+      }
+    )
+    let cost = trip.calculateTripCost()
+    let totalCost = Math.round(cost * 1.1)
+    if(this.checkTotalCost(totalCost) === true) {
+      $('#cost-estimate').text(`Please enter a value in all fields`)
+    } else {
+      $('#cost-estimate').text(`Cost for this trip would be $${totalCost}`)
+    }
+  },
+
+  checkTotalCost(totalCost) {
+    return isNaN(totalCost);
+ },
 
   getDestinationsHtml(destinationsData) {
     let dropDownElement =  destinationsData.reduce((acc, destination) => {
