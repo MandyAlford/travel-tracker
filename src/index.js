@@ -22,11 +22,11 @@ let loginButton = $('#login-button')
 
 loginButton.on('click', (event) => {
   // if (userName.val() === 'agency' && userPassword.val() === 'travel2020') {
-    console.log('an agent logged in')
-    domUpdates.displayAgentInfo()
+    // console.log('an agent logged in')
+    // domUpdates.displayAgentInfo()
   // } else if (userName.val() === 'traveler50' && userPassword.val() === 'travel2020') {
-    // console.log('a traveler logged in')
-    // domUpdates.displayTravelerInfo()
+    console.log('a traveler logged in')
+    domUpdates.displayTravelerInfo()
   // } else {
   //   console.log('error')
   // }

@@ -4,6 +4,14 @@ $header-background: white;
 $button-color: #566E3D;
 $user-color: #06908F;
 $header-color: white;
+$dashboard-view: white;
+
+
+@mixin dashboard {
+  height: 100vh;
+  padding: 5%;
+  width: 50%;
+}
 
 header {
   background-color: $header-background;
@@ -20,7 +28,6 @@ h1 {
 }
 
 main {
-  border: 2px solid red;
   display: flex;
 }
 
@@ -32,18 +39,29 @@ main {
 }
 
 #summary-view {
-    background-color: white;
-    border: 2px solid yellow;
-    height: 100vh;
-    width: 50%;
+    background-color: $dashboard-view;
+    // border: 2px solid yellow;
+    @include dashboard;
 }
 
-#request-trip {
-  border: 2px solid green;
-  height: 100vh;
-  width: 50%;
+#right-dashboard {
+  background-color: $dashboard-view;
+  @include dashboard;
 }
 
 .hidden {
   visibility: hidden;
+}
+
+#trip-request {
+  display: flex;
+  flex-direction: column;
+}
+
+#destination-images {
+  text-align: center;
+}
+
+.destination-image {
+  height: 300px;
 }

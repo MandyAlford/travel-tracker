@@ -12,8 +12,14 @@ let tripsHeader = $('#trips-header');
 let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 let todaysTravelers = $('#todays-travelers');
+let requestTrip = $('#request-trip');
+// let tripStartDate = $('#trip-start');
+// let destinationInput = $('#destinations');
+// let travelerNumber = $('#number-of-travelers');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
+// $(requestTrip).change((event) => {domUpdates.displayDestinationPicture(event);
+// });
 
 let domUpdates = {
 
@@ -23,10 +29,12 @@ let domUpdates = {
         this.greetUser(data[0])
         const travelerData = data[0];
         const tripsData = data[1];
-        const destinationsData = data[2];
-        const traveler = this.instantiateTraveler(travelerData, tripsData, destinationsData)
+        this.destinationsData = data[2];
+        const traveler = this.instantiateTraveler(travelerData, tripsData, this.destinationsData)
         this.displayTrips(traveler.trips);
         this.displayCost(traveler);
+        this.displayTripBookingForm(this.destinationsData);
+        $('.book-trip').on('click', (event) => this.makeTripRequest(event));
       })
       // .catch(error => console.log(error.message));
   },
@@ -122,9 +130,6 @@ let domUpdates = {
   },
 
   displayAllPendingTrips(allTravelers) {
-    // get all pending trips
-    // const allTravelersWithPendingTrips = this.getAllTravelersWithPendingTrips(allTravelers)
-    //generate html elements
     const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
       const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
         if (trip.status === 'pending') {
@@ -137,10 +142,6 @@ let domUpdates = {
       return acc1
     }, '')
     tripsStatus.html(allPendingTripHtml);
-    //toggle hidden class
-    //insert into html
-// debugger
-
   },
 
   updateTripStatus(event) {
@@ -150,29 +151,135 @@ let domUpdates = {
       console.log('deny!')
     }
   },
-  // getAllTravelersWithPendingTrips(allTravelers) {
-  //   return allTravelers.filter((traveler) => {
-  //     return traveler.findAllPendingTrips().length > 0
-  //   })
-  // },
 
   displayCost(traveler) {
     spendHeader.toggleClass('hidden');
-    totalSpend.html(`\$ ${traveler.calculateTotalTripsCost()}`);
+    totalSpend.html(`\$ ${Math.round(traveler.calculateTotalTripsCost())}`);
   },
 
-  // getTripDisplayData(tripsData, destinationsData) {
-  //   let user50Trips = tripsData.filter((trip) => {
-  //     return trip.userID === 50
-  //   })
-  //   let user50Destinations = user50Trips.map((trip) => {
-  //     let destinationName = destinationsData.find((destination) => {
-  //       return trip.destinationID === destination.id
-  //     }).destination
-  //     return {destination: destinationName, status: trip.status}
-  //   })
-  //   return user50Destinations;
-  // },
+  displayTripBookingForm(destinationsData) {
+    let dropDownElement = this.getDestinationsHtml(destinationsData);
+    requestTrip.html(`<form action="trip-request" id='trip-request'>
+       <h2>Where to next?</h2>
+       <h3>Request your next trip!</h3>
+       <label for="trip-start">Choose your trip start date:</label>
+       <input type="date" id="trip-start" name="trip-start"
+              value="2020/03/02"
+              min="2020/03/02" max="2022/12/31">
+       <label for="destinations">Choose your destination:</label>
+       <select id="destinations" name="destinations">${dropDownElement}
+       </select>
+       <label for="number-of-travelers">Total number of travelers:</label>
+       <input type="number" id="number-of-travelers" name="traveler-number" min="1" max="10">
+        <label for="trip-durations">Trip duration:</label>
+        <input type="number" id="trip-duration" name="duration" min="1" max="10">
+       <button class='book-trip' type='button'>Request your trip</button>
+    </form>
+    <section id="cost-estimate"></section>`);
+
+    $('#destinations').on('change', this.calculateTripCost.bind(this));
+    $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
+    $('#trip-durations').on('change', this.calculateTripCost.bind(this));
+    // this.displayDestinationPicture(destinationsData);
+  },
+
+  calculateTripCost(event) {
+    let destinationId = parseInt($('#destinations').val());
+    let destinationInformation = this.destinationsData.find((destination) => {
+      return destination.id === destinationId;
+    });
+    this.displayDestinationPicture(destinationId);
+
+    let trip = new Trip(
+      {
+        destination: {
+          estimatedFlightCostPerPerson: destinationInformation.estimatedFlightCostPerPerson,
+          estimatedLodgingCostPerDay: destinationInformation.estimatedLodgingCostPerDay,
+        },
+        travelers: parseInt($('#number-of-travelers').val()),
+        duration: parseInt($('#trip-duration').val()),
+      }
+    )
+    let cost = trip.calculateTripCost()
+    let totalCost = Math.round(cost * 1.1)
+    if(this.checkTotalCost(totalCost) === true) {
+      $('#cost-estimate').text(`Please enter a value in all fields`)
+    } else {
+      $('#cost-estimate').text(`Cost for this trip would be $${totalCost}`)
+    }
+  },
+
+  checkTotalCost(totalCost) {
+    return isNaN(totalCost);
+ },
+
+  getDestinationsHtml(destinationsData) {
+    let dropDownElement =  destinationsData.reduce((acc, destination) => {
+      acc += `<option value="${destination.id}">${destination.destination}</option>`
+      return acc;
+
+    }, '')
+    return dropDownElement;
+  },
+
+  displayDestinationPicture(destinationId) {
+  let currentDestination = this.destinationsData.find((destination) => {
+    return destination.id === destinationId
+  });
+
+  $('#destination-images').html(` <img id='${currentDestination.id}' class='destination-image' src="${currentDestination.image}" alt="${currentDestination.alt}">`)
+
+ // $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
+ },
+
+ // getDestinationImagesHtml(destinationsData) {
+ //   let imagesHtml = destinationsData.reduce((acc, destination) => {
+ //     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
+ //     return acc;
+ //   }, '')
+ //   return imagesHtml;
+  // debugger
+ // },
+
+  makeTripRequest(event) {
+    // debugger
+    // let tripInfo
+    // if(tripStartDate.length > 0 && travelerNumber.length > 0) {
+    // console.log(dateInfo);
+    // debugger
+
+      let tripInfo = {
+        'id': Date.now(),
+        'userID': 50,
+        'destinationID': parseInt($('#destinations option:selected').val()),
+        'travelers': parseInt($('#number-of-travelers').val()),
+        'date': moment($('#trip-start').val()).format('YYYY/MM/DD'),
+        'duration': parseInt($('#trip-duration').val()),
+        'status': 'pending',
+        'suggestedActivities': []
+      }
+    // } else {
+    //   alert( "All fields required to book trip!" )
+    // }
+    this.submitNewTripRequest(tripInfo)
+  },
+
+  submitNewTripRequest(tripInfo) {
+    fetch(
+      'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(tripInfo)
+      }
+    )
+      .then(response => response.json())
+      .then(data => {this.displayTravelerInfo()})
+      .catch(error => console.log(error.message));
+  },
+
+
+
 };
 
 export default domUpdates;
