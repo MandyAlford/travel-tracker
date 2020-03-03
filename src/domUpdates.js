@@ -46,12 +46,12 @@ let domUpdates = {
         const allTravelersData = data[0];
         const tripsData = data[1];
         const destinationsData = data[2];
-        const allTravelers = allTravelersData.map((travelerData) => {
+        this.allTravelers = allTravelersData.map((travelerData) => {
           return this.instantiateTraveler(travelerData, tripsData, destinationsData)
         })
-        this.displayAllPendingTrips(allTravelers);
+        this.displayAllPendingTrips(this.allTravelers);
         // debugger
-        const agent = new Agent(allTravelers)
+        const agent = new Agent(this.allTravelers)
         totalSpend.text(`$${Math.round(agent.getRevenue())}`);
         const todaysTravelerCount = agent.getTodaysTravelers();
           this.greetAgent(todaysTravelerCount);
@@ -130,10 +130,11 @@ let domUpdates = {
   },
 
   displayAllPendingTrips(allTravelers) {
+    console.log('inside')
     const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
       const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
         if (trip.status === 'pending') {
-          const listElement = `<li>${traveler.name} - ${trip.destination.destination} - ${trip.status} <button class='approve-trip' type='button'>Approve</button><button class='deny-trip' type='button'>Deny</button></li>`
+          const listElement = `<li>${traveler.name} - ${trip.destination.destination} - ${trip.status} <button class='approve-trip' type='button' trip-id=${trip.id}>Approve</button><button class='deny-trip' type='button' trip-id=${trip.id}>Deny</button></li>`
           acc2 += listElement
         }
         return acc2
@@ -145,11 +146,55 @@ let domUpdates = {
   },
 
   updateTripStatus(event) {
+    const tripId = parseInt(event.target.getAttribute('trip-id'));
+
     if($(event.target).hasClass('approve-trip')) {
-      console.log('approve!')
+      // const tripId = parseInt(event.target.getAttribute('trip-id'));
+
+      let tripInfo = {
+        'id': tripId,
+        'status': 'approved'
+      }
+
+      this.approveTripRequest(tripInfo);
+      console.log(tripInfo);
+      console.log('approve!');
     } else if ($(event.target).hasClass('deny-trip')) {
+      let tripInfo = {
+        'id': tripId
+      }
+      console.log(tripInfo);
+      this.deleteTripRequest(tripInfo);
       console.log('deny!')
     }
+  },
+
+  deleteTripRequest(tripInfo) {
+    fetch(
+      'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+      {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(tripInfo)
+      }
+    )
+    .then(response => response.json())
+    .then(data => {this.displayAgentInfo()})
+    .catch(error => console.log(error.message));
+  },
+
+  approveTripRequest(tripInfo) {
+    fetch(
+      'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/updateTrip',
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(tripInfo)
+      }
+    )
+      .then(response => response.json())
+      .then(data => {this.displayAgentInfo()})
+      .catch(error => console.log(error.message));
   },
 
   displayCost(traveler) {
@@ -179,11 +224,11 @@ let domUpdates = {
 
     $('#destinations').on('change', this.calculateTripCost.bind(this));
     $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
-    $('#trip-durations').on('change', this.calculateTripCost.bind(this));
+    $('#trip-duration').on('change', this.calculateTripCost.bind(this));
     // this.displayDestinationPicture(destinationsData);
   },
 
-  calculateTripCost(event) {
+  calculateTripCost() {
     let destinationId = parseInt($('#destinations').val());
     let destinationInformation = this.destinationsData.find((destination) => {
       return destination.id === destinationId;
