@@ -146,8 +146,10 @@ let domUpdates = {
   },
 
   updateTripStatus(event) {
+    const tripId = parseInt(event.target.getAttribute('trip-id'));
+
     if($(event.target).hasClass('approve-trip')) {
-      const tripId = parseInt(event.target.getAttribute('trip-id'));
+      // const tripId = parseInt(event.target.getAttribute('trip-id'));
 
       let tripInfo = {
         'id': tripId,
@@ -158,8 +160,27 @@ let domUpdates = {
       console.log(tripInfo);
       console.log('approve!');
     } else if ($(event.target).hasClass('deny-trip')) {
+      let tripInfo = {
+        'id': tripId
+      }
+      console.log(tripInfo);
+      this.deleteTripRequest(tripInfo);
       console.log('deny!')
     }
+  },
+
+  deleteTripRequest(tripInfo) {
+    fetch(
+      'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+      {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(tripInfo)
+      }
+    )
+    .then(response => response.json())
+    .then(data => {this.displayAgentInfo()})
+    .catch(error => console.log(error.message));
   },
 
   approveTripRequest(tripInfo) {
@@ -172,7 +193,7 @@ let domUpdates = {
       }
     )
       .then(response => response.json())
-      .then(data => {this.displayAllPendingTrips(this.allTravelers)})
+      .then(data => {this.displayAgentInfo()})
       .catch(error => console.log(error.message));
   },
 
