@@ -186,8 +186,9 @@ let domUpdates = {
   calculateTripCost(event) {
     let destinationId = parseInt($('#destinations').val());
     let destinationInformation = this.destinationsData.find((destination) => {
-      return destination.id === destinationId
-    })
+      return destination.id === destinationId;
+    });
+    this.displayDestinationPicture(destinationId);
 
     let trip = new Trip(
       {
@@ -221,19 +222,24 @@ let domUpdates = {
     return dropDownElement;
   },
 
-  displayDestinationPicture(destinationsData) {
-    // let destinationId = parseInt(event.target.value);
- $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
+  displayDestinationPicture(destinationId) {
+  let currentDestination = this.destinationsData.find((destination) => {
+    return destination.id === destinationId
+  });
+
+  $('#destination-images').html(` <img id='${currentDestination.id}' class='destination-image' src="${currentDestination.image}" alt="${currentDestination.alt}">`)
+
+ // $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
  },
 
- getDestinationImagesHtml(destinationsData) {
-   let imagesHtml = destinationsData.reduce((acc, destination) => {
-     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
-     return acc;
-   }, '')
-   return imagesHtml;
+ // getDestinationImagesHtml(destinationsData) {
+ //   let imagesHtml = destinationsData.reduce((acc, destination) => {
+ //     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
+ //     return acc;
+ //   }, '')
+ //   return imagesHtml;
   // debugger
- },
+ // },
 
   makeTripRequest(event) {
     // debugger
