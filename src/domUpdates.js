@@ -175,6 +175,8 @@ let domUpdates = {
         <input type="number" id="trip-duration" name="duration" min="1" max="10">
        <button class='book-trip' type='button'>Request your trip</button>
     </form>`);
+
+    this.displayDestinationPicture(destinationsData);
   },
 
   getDestinationsHtml(destinationsData) {
@@ -186,10 +188,19 @@ let domUpdates = {
     return dropDownElement;
   },
 
-  // displayDestinationPicture(event) {
-  //   let destinationId = parseInt(event.target.value);
-  //  debugger
-  // }
+  displayDestinationPicture(destinationsData) {
+    // let destinationId = parseInt(event.target.value);
+ $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
+ },
+
+ getDestinationImagesHtml(destinationsData) {
+   let imagesHtml = destinationsData.reduce((acc, destination) => {
+     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
+     return acc;
+   }, '')
+   return imagesHtml;
+  // debugger
+ },
 
   makeTripRequest(event) {
     // debugger
@@ -226,7 +237,9 @@ let domUpdates = {
       .then(response => response.json())
       .then(data => {this.displayTravelerInfo()})
       .catch(error => console.log(error.message));
-  }
+  },
+
+
 
 };
 

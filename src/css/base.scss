@@ -44,7 +44,7 @@ main {
     @include dashboard;
 }
 
-#request-trip {
+#right-dashboard {
   background-color: $dashboard-view;
   @include dashboard;
 }
@@ -56,4 +56,8 @@ main {
 #trip-request {
   display: flex;
   flex-direction: column;
+}
+
+.destination-image {
+  height: 50px;
 }
