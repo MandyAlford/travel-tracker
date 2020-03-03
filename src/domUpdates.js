@@ -13,8 +13,13 @@ let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 let todaysTravelers = $('#todays-travelers');
 let requestTrip = $('#request-trip');
+// let tripStartDate = $('#trip-start');
+// let destinationInput = $('#destinations');
+// let travelerNumber = $('#number-of-travelers');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
+// $(requestTrip).change((event) => {domUpdates.displayDestinationPicture(event);
+// });
 
 let domUpdates = {
 
@@ -29,6 +34,7 @@ let domUpdates = {
         this.displayTrips(traveler.trips);
         this.displayCost(traveler);
         this.displayTripBookingForm(destinationsData);
+        $('.book-trip').on('click', (event) => this.makeTripRequest(event));
       })
       // .catch(error => console.log(error.message));
   },
@@ -152,7 +158,6 @@ let domUpdates = {
   },
 
   displayTripBookingForm(destinationsData) {
-    debugger
     let dropDownElement = this.getDestinationsHtml(destinationsData);
     requestTrip.html(`<form action="trip-request" id='trip-request'>
        <h2>Where to next?</h2>
@@ -166,6 +171,8 @@ let domUpdates = {
        </select>
        <label for="number-of-travelers">Total number of travelers:</label>
        <input type="number" id="number-of-travelers" name="traveler-number" min="1" max="10">
+        <label for="trip-durations">Trip duration:</label>
+        <input type="number" id="trip-duration" name="duration" min="1" max="10">
        <button class='book-trip' type='button'>Request your trip</button>
     </form>`);
   },
@@ -173,12 +180,54 @@ let domUpdates = {
   getDestinationsHtml(destinationsData) {
     let dropDownElement =  destinationsData.reduce((acc, destination) => {
       acc += `<option value="${destination.id}">${destination.destination}</option>`
-        // debugger
       return acc;
 
     }, '')
     return dropDownElement;
+  },
+
+  // displayDestinationPicture(event) {
+  //   let destinationId = parseInt(event.target.value);
+  //  debugger
+  // }
+
+  makeTripRequest(event) {
+    // debugger
+    // let tripInfo
+    // if(tripStartDate.length > 0 && travelerNumber.length > 0) {
+    // console.log(dateInfo);
+    // debugger
+
+      let tripInfo = {
+        'id': Date.now(),
+        'userID': 50,
+        'destinationID': parseInt($('#destinations option:selected').val()),
+        'travelers': parseInt($('#number-of-travelers').val()),
+        'date': moment($('#trip-start').val()).format('YYYY/MM/DD'),
+        'duration': parseInt($('#trip-duration').val()),
+        'status': 'pending',
+        'suggestedActivities': []
+      }
+    // } else {
+    //   alert( "All fields required to book trip!" )
+    // }
+    this.submitNewTripRequest(tripInfo)
+  },
+
+  submitNewTripRequest(tripInfo) {
+    fetch(
+      'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(tripInfo)
+      }
+    )
+      .then(response => response.json())
+      .then(data => {this.displayTravelerInfo()})
+      .catch(error => console.log(error.message));
   }
+
 };
 
 export default domUpdates;
