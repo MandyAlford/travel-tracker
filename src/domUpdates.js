@@ -224,11 +224,11 @@ let domUpdates = {
 
     $('#destinations').on('change', this.calculateTripCost.bind(this));
     $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
-    $('#trip-durations').on('change', this.calculateTripCost.bind(this));
+    $('#trip-duration').on('change', this.calculateTripCost.bind(this));
     // this.displayDestinationPicture(destinationsData);
   },
 
-  calculateTripCost(event) {
+  calculateTripCost() {
     let destinationId = parseInt($('#destinations').val());
     let destinationInformation = this.destinationsData.find((destination) => {
       return destination.id === destinationId;
