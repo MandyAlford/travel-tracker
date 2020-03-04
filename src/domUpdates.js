@@ -130,8 +130,6 @@ let domUpdates = {
   },
 
   findTravelerInfo() {
-
-    console.log($('#user-search').val())
     let name = $('#user-search').val();
     let nameToSearch = name.toUpperCase();
     let searchedTraveler = this.allTravelers.find((traveler) => {
@@ -191,15 +189,11 @@ let domUpdates = {
       }
 
       this.approveTripRequest(tripInfo);
-      console.log(tripInfo);
-      console.log('approve!');
     } else if ($(event.target).hasClass('deny-trip')) {
       let tripInfo = {
         'id': tripId
       }
-      console.log(tripInfo);
       this.deleteTripRequest(tripInfo);
-      console.log('deny!')
     }
   },
 
