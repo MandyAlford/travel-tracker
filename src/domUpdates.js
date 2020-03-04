@@ -5,7 +5,7 @@ import Destination from './destination';
 import Agent from '../src/agent'
 import moment from 'moment'
 
-let summaryView = $('#summary-view');
+// let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');
 let tripsStatus = $('#trips-status');
 let tripsHeader = $('#trips-header');
@@ -62,7 +62,7 @@ let domUpdates = {
     this.displayAllApprovedTripsHtml([traveler]);
     this.displayCost(traveler);
     spendHeader.text(`${traveler.name}'s total spend this year:`);
-    $('#trips-header').text(`${traveler.name}'s trips:`)
+    $('#trips-header').text(`${traveler.name}'s trips:`);
   },
 
   instantiateTraveler(travelerData, tripsData, destinationsData) {
@@ -112,7 +112,9 @@ let domUpdates = {
   },
 
   greetUser(data) {
-    userGreeting.html(`Welcome, ${data.name}!!!`)
+    userGreeting.html(`Welcome, ${data.name}!!!`);
+    $('#summary-view').addClass('dashboard');
+    $('#right-dashboard').addClass('dashboard');
   },
 
   greetAgent(todaysTravelerCount) {
@@ -127,13 +129,15 @@ let domUpdates = {
     spendHeader.text(`Your revenue this year:`);
     todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`);
     this.showUserSearch();
+    $('#summary-view').addClass('dashboard');
+    $('#right-dashboard').addClass('dashboard')
   },
 
   showUserSearch() {
     $('#right-dashboard').html(`<section id='search'>
              <h3> Search for traveler by name: <h3>
                <input id='user-search' class='search' type='text' placeholder='Traveler name'>
-               <section id='user-account-info'></section>  <button id='search-button'></button>
+               <section id='user-account-info'></section>  <button id='search-button'>Search for Traveler</button>
            </section>`)
     $('#search-button').on('click', this.findTravelerInfo.bind(this));
   },

@@ -13,6 +13,11 @@ $dashboard-view: white;
   width: 50%;
 }
 
+@mixin input {
+  box-shadow: 5px 10px;
+  width: 85%
+}
+
 header {
   background-color: $header-background;
   display: flex;
@@ -39,14 +44,15 @@ main {
 }
 
 #summary-view {
-    background-color: $dashboard-view;
-    // border: 2px solid yellow;
     @include dashboard;
 }
 
 #right-dashboard {
-  background-color: $dashboard-view;
   @include dashboard;
+}
+
+.dashboard {
+  background-color: $dashboard-view;
 }
 
 .hidden {
@@ -66,6 +72,8 @@ main {
   height: 300px;
 }
 
-.button {
-  
+label,
+.book-trip {
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
