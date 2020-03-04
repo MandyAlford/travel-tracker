@@ -1,6 +1,5 @@
 import chai from 'chai';
 const expect = chai.expect;
-// import Destination from '../src/destination'
 import Trip from '../src/trip'
 import Traveler from '../src/traveler'
 import Agent from '../src/agent'
