@@ -25,7 +25,7 @@ loginButton.on('click', (event) => {
     // console.log('an agent logged in')
     // domUpdates.displayAgentInfo()
   // } else if (userName.val() === 'traveler50' && userPassword.val() === 'travel2020') {
-    console.log('a traveler logged in')
+    // console.log('a traveler logged in')
     domUpdates.displayTravelerInfo()
   // } else {
   //   console.log('error')

@@ -5,7 +5,6 @@ import Destination from './destination';
 import Agent from '../src/agent'
 import moment from 'moment'
 
-// let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');
 let tripsStatus = $('#trips-status');
 let tripsHeader = $('#trips-header');
@@ -13,13 +12,10 @@ let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 let todaysTravelers = $('#todays-travelers');
 let requestTrip = $('#request-trip');
-// let tripStartDate = $('#trip-start');
-// let destinationInput = $('#destinations');
-// let travelerNumber = $('#number-of-travelers');
+let tripStartDate = $('#trip-start');
+let travelerNumber = $('#number-of-travelers');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
-// $(requestTrip).change((event) => {domUpdates.displayDestinationPicture(event);
-// });
 
 let domUpdates = {
 
@@ -36,7 +32,7 @@ let domUpdates = {
         this.displayTripBookingForm(this.destinationsData);
         $('.book-trip').on('click', (event) => this.makeTripRequest(event));
       })
-      // .catch(error => console.log(error.message));
+      .catch(error => console.log(error.message));
   },
 
   displayAgentInfo() {
@@ -198,8 +194,6 @@ let domUpdates = {
     const tripId = parseInt(event.target.getAttribute('trip-id'));
 
     if($(event.target).hasClass('approve-trip')) {
-      // const tripId = parseInt(event.target.getAttribute('trip-id'));
-
       let tripInfo = {
         'id': tripId,
         'status': 'approved'
@@ -274,7 +268,6 @@ let domUpdates = {
     $('#destinations').on('change', this.calculateTripCost.bind(this));
     $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
     $('#trip-duration').on('change', this.calculateTripCost.bind(this));
-    // this.displayDestinationPicture(destinationsData);
   },
 
   calculateTripCost() {
@@ -322,26 +315,10 @@ let domUpdates = {
   });
 
   $('#destination-images').html(` <img id='${currentDestination.id}' class='destination-image' src="${currentDestination.image}" alt="${currentDestination.alt}">`)
-
- // $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
  },
 
- // getDestinationImagesHtml(destinationsData) {
- //   let imagesHtml = destinationsData.reduce((acc, destination) => {
- //     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
- //     return acc;
- //   }, '')
- //   return imagesHtml;
-  // debugger
- // },
-
   makeTripRequest(event) {
-    // debugger
-    // let tripInfo
-    // if(tripStartDate.length > 0 && travelerNumber.length > 0) {
-    // console.log(dateInfo);
-    // debugger
-
+    if(tripStartDate.length > 0 && travelerNumber.length > 0) {
       let tripInfo = {
         'id': Date.now(),
         'userID': 50,
@@ -352,9 +329,9 @@ let domUpdates = {
         'status': 'pending',
         'suggestedActivities': []
       }
-    // } else {
-    //   alert( "All fields required to book trip!" )
-    // }
+    } else {
+      alert( "All fields required to book trip!" )
+    }
     this.submitNewTripRequest(tripInfo)
   },
 
@@ -371,9 +348,6 @@ let domUpdates = {
       .then(data => {this.displayTravelerInfo()})
       .catch(error => console.log(error.message));
   },
-
-
-
 };
 
 export default domUpdates;
