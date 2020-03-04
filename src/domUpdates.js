@@ -5,17 +5,8 @@ import Destination from './destination';
 import Agent from '../src/agent'
 import moment from 'moment'
 
-let userGreeting = $('#user-greeting');
-let tripsStatus = $('#trips-status');
-let tripsHeader = $('#trips-header');
-let spendHeader = $('#spend-header');
-let totalSpend = $('#total-spend');
-let todaysTravelers = $('#todays-travelers');
-let requestTrip = $('#request-trip');
-let tripStartDate = $('#trip-start');
-let travelerNumber = $('#number-of-travelers');
 
-tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
+$('#trips-status').on('click', (event) => domUpdates.updateTripStatus(event));
 
 let domUpdates = {
 
@@ -47,7 +38,7 @@ let domUpdates = {
         })
         this.displayAllPendingTrips(this.allTravelers);
         const agent = new Agent({allTravelers: this.allTravelers})
-        totalSpend.text(`$${Math.round(agent.getRevenue())}`);
+        $('#total-spend').text(`$${Math.round(agent.getRevenue())}`);
         const todaysTravelerCount = agent.getTodaysTravelers();
         this.greetAgent(todaysTravelerCount);
       })
@@ -57,7 +48,7 @@ let domUpdates = {
     this.displayAllPendingTrips([traveler]);
     this.displayAllApprovedTripsHtml([traveler]);
     this.displayCost(traveler);
-    spendHeader.text(`${traveler.name}'s total spend this year:`);
+    $('#spend-header').text(`${traveler.name}'s total spend this year:`);
     $('#trips-header').text(`${traveler.name}'s trips:`);
   },
 
@@ -108,22 +99,22 @@ let domUpdates = {
   },
 
   greetUser(data) {
-    userGreeting.html(`Welcome, ${data.name}!!!`);
+    $('#user-greeting').html(`Welcome, ${data.name}!!!`);
     $('#summary-view').addClass('dashboard');
     $('#right-dashboard').addClass('dashboard');
   },
 
   greetAgent(todaysTravelerCount) {
-    userGreeting.html(`Welcome, Agent!!!`);
+    $('#user-greeting').html(`Welcome, Agent!!!`);
     this.updateAgentDashBoardHeaders(todaysTravelerCount);
   },
 
   updateAgentDashBoardHeaders(todaysTravelerCount) {
-    tripsHeader.text(`Trips pending Approval:`);
-    tripsHeader.removeClass('hidden');
-    spendHeader.removeClass('hidden');
-    spendHeader.text(`Your revenue this year:`);
-    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`);
+    $('#trips-header').text(`Trips pending Approval:`);
+    $('#trips-header').removeClass('hidden');
+    $('#spend-header').removeClass('hidden');
+    $('#spend-header').text(`Your revenue this year:`);
+    $('#todays-travelers').text(`There are ${todaysTravelerCount} travelers on trips today`);
     this.showUserSearch();
     $('#summary-view').addClass('dashboard');
     $('#right-dashboard').addClass('dashboard')
@@ -156,8 +147,8 @@ let domUpdates = {
     let tripsToDisplay = trips.map((trip) => {
       return `<li>${trip.destination.destination} - ${trip.status}</li>`
     }).join('')
-    tripsHeader.removeClass('hidden');
-    tripsStatus.html(tripsToDisplay);
+    $('#trips-header').removeClass('hidden');
+    $('#trips-status').html(tripsToDisplay);
   },
 
   displayAllPendingTrips(allTravelers) {
@@ -172,7 +163,7 @@ let domUpdates = {
       acc1 += allTripDataForTraveler
       return acc1
     }, '')
-    tripsStatus.html(allPendingTripHtml);
+    $('#trips-status').html(allPendingTripHtml);
   },
 
   displayAllApprovedTripsHtml(allTravelers) {
@@ -187,7 +178,7 @@ let domUpdates = {
       acc1 += allTripDataForTraveler
       return acc1
     }, '')
-    tripsStatus.append(allPendingTripHtml);
+    $('#trips-status').append(allPendingTripHtml);
   },
 
   updateTripStatus(event) {
@@ -241,13 +232,13 @@ let domUpdates = {
   },
 
   displayCost(traveler) {
-    spendHeader.removeClass('hidden');
-    totalSpend.html(`\$ ${Math.round(traveler.calculateTotalTripsCost())}`);
+    $('#spend-header').removeClass('hidden');
+    $('#total-spend').html(`\$ ${Math.round(traveler.calculateTotalTripsCost())}`);
   },
 
   displayTripBookingForm(destinationsData) {
     let dropDownElement = this.getDestinationsHtml(destinationsData);
-    requestTrip.html(`<form action="trip-request" id='trip-request'>
+    $('#request-trip').html(`<form action="trip-request" id='trip-request'>
        <h2>Where to next?</h2>
        <h3>Request your next trip!</h3>
        <label for="trip-start">Choose your trip start date:</label>

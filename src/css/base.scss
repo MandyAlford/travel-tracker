@@ -1,33 +1,6 @@
-/* This is an example of using Sass, otherwise plain CSS works too*/
-$primary-background: #003049;
-$header-background: white;
-$button-color: #566E3D;
-$user-color: #06908F;
-$header-color: white;
-$dashboard-view: white;
 
-// @import 'variables';
-// @import 'mixins';
-
-@mixin dashboard {
-  height: 100vh;
-  padding: 5%;
-  width: 50%;
-}
-
-@mixin input {
-  box-shadow: 5px 10px;
-  width: 85%;
-}
-
-@mixin flex {
-  display: flex;
-  flex-direction: column;
-}
-
-@mixin small {
-
-}
+@import 'variables';
+@import 'mixins';
 
 header {
   background-color: $header-background;
@@ -86,6 +59,10 @@ label,
 .book-trip {
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+button {
+@include button;
 }
 
 // media queries
