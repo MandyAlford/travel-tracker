@@ -6,6 +6,8 @@ $user-color: #06908F;
 $header-color: white;
 $dashboard-view: white;
 
+// @import 'variables';
+// @import 'mixins';
 
 @mixin dashboard {
   height: 100vh;
@@ -15,7 +17,16 @@ $dashboard-view: white;
 
 @mixin input {
   box-shadow: 5px 10px;
-  width: 85%
+  width: 85%;
+}
+
+@mixin flex {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin small {
+
 }
 
 header {
@@ -26,17 +37,17 @@ header {
 }
 
 h1 {
-    font-family: 'Rock Salt', ;
-    font-size: 48px;
-    margin-top: 0;
-    margin-bottom: 0;
+  font-family: 'Rock Salt', ;
+  font-size: 48px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 main {
   display: flex;
 }
 
-  body {
+body {
   background: url('../images/katie-drazdauskaite-JoKpX_JjY-A-unsplash.jpg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -44,7 +55,7 @@ main {
 }
 
 #summary-view {
-    @include dashboard;
+  @include dashboard;
 }
 
 #right-dashboard {
@@ -60,8 +71,7 @@ main {
 }
 
 #trip-request {
-  display: flex;
-  flex-direction: column;
+  @include flex;
 }
 
 #destination-images {
@@ -76,4 +86,26 @@ label,
 .book-trip {
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+// media queries
+@media only screen and (max-width: 900px) {
+  main {
+   @include flex;
+  }
+
+  #summary-view,
+  #right-dashboard {
+    height: auto;
+    width: 100%
+  }
+
+  .destination-image {
+    height: 230px;
+    margin-left: -9%;
+  }
+
+  #trip-request {
+    width: 70%;
+  }
 }
