@@ -7,6 +7,8 @@ class Traveler extends User {
     this.name = usersData.name;
     this.travelerType = usersData.travelerType;
     this.trips = usersData.trips;
+    this.username = 'traveler50'
+    this.password = 'travel2020'
   }
 
   calculateTotalTripsCost() {

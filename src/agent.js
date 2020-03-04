@@ -5,6 +5,8 @@ class Agent extends User {
   constructor(allTravelers) {
     super();
     this.travelersInfo = allTravelers;
+    this.username = 'agency'
+    this.password = 'travel2020'
   }
   getRevenue() {
     let totalTripsCost = this.travelersInfo.reduce((acc, traveler) => {

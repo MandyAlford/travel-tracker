@@ -1,7 +1,6 @@
 // This is the JavaScript entry file - your code begins here
 // Do not delete or rename this file ********
 import domUpdates from './domUpdates';
-import scripts from './scripts';
 import Destination from './destination';
 import Trip from './trip';
 import User from './user';
@@ -16,18 +15,21 @@ import './images/turing-logo.png'
 console.log('This is the JavaScript entry file - your code begins here.');
 
 // for event listeners
-let userName = $('#user-name')
-let userPassword = $('#user-password')
-let loginButton = $('#login-button')
+const loginButton = $('#login-button')
 
 loginButton.on('click', (event) => {
-  // if (userName.val() === 'agency' && userPassword.val() === 'travel2020') {
-    // console.log('an agent logged in')
-    // domUpdates.displayAgentInfo()
-  // } else if (userName.val() === 'traveler50' && userPassword.val() === 'travel2020') {
-    // console.log('a traveler logged in')
+  const traveler = new Traveler({})
+  const agent = new Agent({})
+  const username = $('#user-name').val()
+  const password = $('#user-password').val()
+
+  if (agent.verifyUser(username, password)) {
+    console.log('an agent logged in')
+    domUpdates.displayAgentInfo()
+  } else if (traveler.verifyUser(username, password)) {
+    console.log('a traveler logged in')
     domUpdates.displayTravelerInfo()
-  // } else {
-  //   console.log('error')
-  // }
+  } else {
+    console.log('error')
+  }
 })
