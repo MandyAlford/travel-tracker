@@ -5,7 +5,6 @@ import Destination from './destination';
 import Agent from '../src/agent'
 import moment from 'moment'
 
-let summaryView = $('#summary-view');
 let userGreeting = $('#user-greeting');
 let tripsStatus = $('#trips-status');
 let tripsHeader = $('#trips-header');
@@ -13,18 +12,15 @@ let spendHeader = $('#spend-header');
 let totalSpend = $('#total-spend');
 let todaysTravelers = $('#todays-travelers');
 let requestTrip = $('#request-trip');
-// let tripStartDate = $('#trip-start');
-// let destinationInput = $('#destinations');
-// let travelerNumber = $('#number-of-travelers');
+let tripStartDate = $('#trip-start');
+let travelerNumber = $('#number-of-travelers');
 
 tripsStatus.on('click', (event) => domUpdates.updateTripStatus(event));
-// $(requestTrip).change((event) => {domUpdates.displayDestinationPicture(event);
-// });
 
 let domUpdates = {
 
-  displayTravelerInfo() {
-    Promise.all([this.getTravelerData(), this.getTripsData(), this.getDestinationsData()])
+  displayTravelerInfo(travelerId = 50) {
+    Promise.all([this.getTravelerData(travelerId), this.getTripsData(), this.getDestinationsData()])
       .then(data => {
         this.greetUser(data[0])
         const travelerData = data[0];
@@ -36,7 +32,7 @@ let domUpdates = {
         this.displayTripBookingForm(this.destinationsData);
         $('.book-trip').on('click', (event) => this.makeTripRequest(event));
       })
-      // .catch(error => console.log(error.message));
+      .catch(error => console.log(error.message));
   },
 
   displayAgentInfo() {
@@ -50,12 +46,19 @@ let domUpdates = {
           return this.instantiateTraveler(travelerData, tripsData, destinationsData)
         })
         this.displayAllPendingTrips(this.allTravelers);
-        // debugger
-        const agent = new Agent(this.allTravelers)
+        const agent = new Agent({allTravelers: this.allTravelers})
         totalSpend.text(`$${Math.round(agent.getRevenue())}`);
         const todaysTravelerCount = agent.getTodaysTravelers();
-          this.greetAgent(todaysTravelerCount);
+        this.greetAgent(todaysTravelerCount);
       })
+  },
+
+  showTravelerInfo(traveler) {
+    this.displayAllPendingTrips([traveler]);
+    this.displayAllApprovedTripsHtml([traveler]);
+    this.displayCost(traveler);
+    spendHeader.text(`${traveler.name}'s total spend this year:`);
+    $('#trips-header').text(`${traveler.name}'s trips:`);
   },
 
   instantiateTraveler(travelerData, tripsData, destinationsData) {
@@ -83,8 +86,8 @@ let domUpdates = {
       .catch(error => console.log(error.message));
   },
 
-  getTravelerData() {
-    return fetch('https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/50')
+  getTravelerData(travelerId) {
+    return fetch(`https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/travelers/travelers/${travelerId}`)
       .then(response => response.json())
       .then(data => data)
       .catch(error => console.log(error.message));
@@ -105,7 +108,9 @@ let domUpdates = {
   },
 
   greetUser(data) {
-    userGreeting.html(`Welcome, ${data.name}!!!`)
+    userGreeting.html(`Welcome, ${data.name}!!!`);
+    $('#summary-view').addClass('dashboard');
+    $('#right-dashboard').addClass('dashboard');
   },
 
   greetAgent(todaysTravelerCount) {
@@ -115,22 +120,47 @@ let domUpdates = {
 
   updateAgentDashBoardHeaders(todaysTravelerCount) {
     tripsHeader.text(`Trips pending Approval:`);
-    tripsHeader.toggleClass('hidden');
-    spendHeader.toggleClass('hidden');
+    tripsHeader.removeClass('hidden');
+    spendHeader.removeClass('hidden');
     spendHeader.text(`Your revenue this year:`);
-    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`)
+    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`);
+    this.showUserSearch();
+    $('#summary-view').addClass('dashboard');
+    $('#right-dashboard').addClass('dashboard')
+  },
+
+  showUserSearch() {
+    $('#right-dashboard').html(`<section id='search'>
+             <h3> Search for traveler by name: <h3>
+               <input id='user-search' class='search' type='text' placeholder='Traveler name'>
+               <section id='user-account-info'></section>  <button id='search-button'>Search for Traveler</button>
+           </section>`)
+    $('#search-button').on('click', this.findTravelerInfo.bind(this));
+  },
+
+  findTravelerInfo() {
+
+    console.log($('#user-search').val())
+    let name = $('#user-search').val();
+    let nameToSearch = name.toUpperCase();
+    let searchedTraveler = this.allTravelers.find((traveler) => {
+      let travelerName = traveler.name.toUpperCase();
+      let travelerNames = travelerName.split(' ');
+
+      return travelerNames.includes(nameToSearch)
+    })
+    this.showTravelerInfo(searchedTraveler)
   },
 
   displayTrips(trips) {
     let tripsToDisplay = trips.map((trip) => {
       return `<li>${trip.destination.destination} - ${trip.status}</li>`
     }).join('')
-    tripsHeader.toggleClass('hidden');
+    tripsHeader.removeClass('hidden');
     tripsStatus.html(tripsToDisplay);
   },
 
   displayAllPendingTrips(allTravelers) {
-    console.log('inside')
     const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
       const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
         if (trip.status === 'pending') {
@@ -145,12 +175,25 @@ let domUpdates = {
     tripsStatus.html(allPendingTripHtml);
   },
 
+  displayAllApprovedTripsHtml(allTravelers) {
+    const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
+      const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
+        if (trip.status === 'approved') {
+          const listElement = `<li>${traveler.name} - ${trip.destination.destination} - ${trip.status}</li>`
+          acc2 += listElement
+        }
+        return acc2
+      }, '')
+      acc1 += allTripDataForTraveler
+      return acc1
+    }, '')
+    tripsStatus.append(allPendingTripHtml);
+  },
+
   updateTripStatus(event) {
     const tripId = parseInt(event.target.getAttribute('trip-id'));
 
     if($(event.target).hasClass('approve-trip')) {
-      // const tripId = parseInt(event.target.getAttribute('trip-id'));
-
       let tripInfo = {
         'id': tripId,
         'status': 'approved'
@@ -198,7 +241,7 @@ let domUpdates = {
   },
 
   displayCost(traveler) {
-    spendHeader.toggleClass('hidden');
+    spendHeader.removeClass('hidden');
     totalSpend.html(`\$ ${Math.round(traveler.calculateTotalTripsCost())}`);
   },
 
@@ -225,7 +268,6 @@ let domUpdates = {
     $('#destinations').on('change', this.calculateTripCost.bind(this));
     $('#number-of-travelers').on('change', this.calculateTripCost.bind(this));
     $('#trip-duration').on('change', this.calculateTripCost.bind(this));
-    // this.displayDestinationPicture(destinationsData);
   },
 
   calculateTripCost() {
@@ -273,26 +315,9 @@ let domUpdates = {
   });
 
   $('#destination-images').html(` <img id='${currentDestination.id}' class='destination-image' src="${currentDestination.image}" alt="${currentDestination.alt}">`)
-
- // $('#destination-images').html(this.getDestinationImagesHtml(destinationsData));
  },
 
- // getDestinationImagesHtml(destinationsData) {
- //   let imagesHtml = destinationsData.reduce((acc, destination) => {
- //     acc += ` <img id='${destination.id}' class='destination-image' src="${destination.image}" alt="${destination.alt}">`
- //     return acc;
- //   }, '')
- //   return imagesHtml;
-  // debugger
- // },
-
   makeTripRequest(event) {
-    // debugger
-    // let tripInfo
-    // if(tripStartDate.length > 0 && travelerNumber.length > 0) {
-    // console.log(dateInfo);
-    // debugger
-
       let tripInfo = {
         'id': Date.now(),
         'userID': 50,
@@ -303,9 +328,6 @@ let domUpdates = {
         'status': 'pending',
         'suggestedActivities': []
       }
-    // } else {
-    //   alert( "All fields required to book trip!" )
-    // }
     this.submitNewTripRequest(tripInfo)
   },
 
@@ -322,9 +344,6 @@ let domUpdates = {
       .then(data => {this.displayTravelerInfo()})
       .catch(error => console.log(error.message));
   },
-
-
-
 };
 
 export default domUpdates;

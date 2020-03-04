@@ -59,7 +59,7 @@ describe('Agent', function() {
      "trips": [trip1, trip2]
      })
 
-    agent = new Agent([traveler]);
+    agent = new Agent({allTravelers: [traveler]});
   })
 
  it('should be a function', function() {
