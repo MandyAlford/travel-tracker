@@ -318,7 +318,6 @@ let domUpdates = {
  },
 
   makeTripRequest(event) {
-    if(tripStartDate.length > 0 && travelerNumber.length > 0) {
       let tripInfo = {
         'id': Date.now(),
         'userID': 50,
@@ -329,9 +328,6 @@ let domUpdates = {
         'status': 'pending',
         'suggestedActivities': []
       }
-    } else {
-      alert( "All fields required to book trip!" )
-    }
     this.submitNewTripRequest(tripInfo)
   },
 
