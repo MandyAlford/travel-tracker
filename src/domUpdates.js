@@ -21,7 +21,8 @@ let domUpdates = {
         this.displayTrips(traveler.trips);
         this.displayCost(traveler);
         this.displayTripBookingForm(this.destinationsData);
-        $('.book-trip').on('click', (event) => this.makeTripRequest(event));
+        debugger
+        $('.book-trip').on('click', (event) => this.makeTripRequest(event, traveler.id));
       })
       .catch(error => console.log(error.message));
   },
@@ -302,10 +303,10 @@ let domUpdates = {
   $('#destination-images').html(` <img id='${currentDestination.id}' class='destination-image' src="${currentDestination.image}" alt="${currentDestination.alt}">`)
  },
 
-  makeTripRequest(event) {
+  makeTripRequest(event, travelerId) {
       let tripInfo = {
         'id': Date.now(),
-        'userID': 50,
+        'userID': travelerId,
         'destinationID': parseInt($('#destinations option:selected').val()),
         'travelers': parseInt($('#number-of-travelers').val()),
         'date': moment($('#trip-start').val()).format('YYYY/MM/DD'),
@@ -313,10 +314,10 @@ let domUpdates = {
         'status': 'pending',
         'suggestedActivities': []
       }
-    this.submitNewTripRequest(tripInfo)
+    this.submitNewTripRequest(tripInfo, travelerId)
   },
 
-  submitNewTripRequest(tripInfo) {
+  submitNewTripRequest(tripInfo, travelerId) {
     fetch(
       'https://fe-apps.herokuapp.com/api/v1/travel-tracker/1911/trips/trips',
       {
@@ -326,7 +327,7 @@ let domUpdates = {
       }
     )
       .then(response => response.json())
-      .then(data => {this.displayTravelerInfo()})
+      .then(data => {this.displayTravelerInfo(travelerId)})
       .catch(error => console.log(error.message));
   },
 };
