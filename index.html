@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" content="width=device-width, initial-scale=1" name="viewport" />
+    <meta name="Description" content="Travel Tracking App"/>
+    <link href="https://fonts.googleapis.com/css?family=Rock+Salt&display=swap" rel="stylesheet">
+    <title>Great Escapes-Travel Tracker</title>
+  </head>
+  <body>
+    <header class='main-header'>
+      <div>
+        <h1>Great Escapes</h1>
+      </div>
+     <aside class='user-login'>
+       <h3>Sign in to access your account:</h3>
+       <div>
+         <input id='user-name' aria-label='enter user name here' class='login' type='text' name='user' placeholder='user name'>
+       <input id='user-password' aria-label='enter password here' class='password' type='password' name='password' placeholder='password'>
+     </div>
+       <button id='login-button' class='button' type='submit'>Log In</button>
+       <p id='log-in-error' class='hidden'>Please enter a valid user name and password</p>
+     </aside>
+   </header>
+   <main>
+     <section id='summary-view'>
+         <h2 id='user-greeting'></h2>
+         <h3 id='trips-header' class='hidden'>Your trips:</h3>
+         <section id='trips-status'></section>
+         <h3 id='spend-header' class='hidden'> Total Spend on Trips:</h3>
+         <section id='total-spend'></section>
+         <h3 id='todays-travelers'></h3>
+     </section>
+     <section id='right-dashboard'>
+       <section id='request-trip'>
+       </section>
+       <section id='destination-images'>
+       </section>
+     </section>
+   </main>
+    <!-- Do not include the index.js or main.bundle.js file here - it is done automatically by the webpack server -->
+  <script type="text/javascript" src="main.bundle.js"></script></body>
+</html>
