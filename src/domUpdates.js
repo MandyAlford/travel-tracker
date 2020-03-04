@@ -54,7 +54,7 @@ let domUpdates = {
         const agent = new Agent(this.allTravelers)
         totalSpend.text(`$${Math.round(agent.getRevenue())}`);
         const todaysTravelerCount = agent.getTodaysTravelers();
-          this.greetAgent(todaysTravelerCount);
+        this.greetAgent(todaysTravelerCount);
       })
   },
 
@@ -118,7 +118,36 @@ let domUpdates = {
     tripsHeader.toggleClass('hidden');
     spendHeader.toggleClass('hidden');
     spendHeader.text(`Your revenue this year:`);
-    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`)
+    todaysTravelers.text(`There are ${todaysTravelerCount} travelers on trips today`);
+    this.showUserSearch();
+  },
+
+  showUserSearch() {
+    $('#right-dashboard').html(`<section id='search'>
+             <h3> Search for traveler by name: <h3>
+               <input id='user-search' class='search' type='text' placeholder='Traveler name'>
+               <section id='user-account-info'></section>  <button id='search-button'></button>
+           </section>`)
+    $('#search-button').on('click', this.findTravelerInfo.bind(this));
+  },
+
+  findTravelerInfo() {
+
+    console.log($('#user-search').val())
+      // debugger
+    let name = $('#user-search').val();
+    let nameToSearch = name.toUpperCase();
+    // let nameToSearch = nameUpperCase.split(' ');
+
+    // debugger
+    let searchedTraveler = this.allTravelers.find((traveler) => {
+      let travelerName = traveler.name.toUpperCase();
+      let travelerNames = travelerName.split(' ');
+
+      debugger
+      return travelerNames.includes(nameToSearch)
+    })
+    console.log(searchedTraveler)
   },
 
   displayTrips(trips) {
@@ -130,7 +159,6 @@ let domUpdates = {
   },
 
   displayAllPendingTrips(allTravelers) {
-    console.log('inside')
     const allPendingTripHtml = allTravelers.reduce((acc1, traveler) => {
       const allTripDataForTraveler = traveler.trips.reduce((acc2, trip) => {
         if (trip.status === 'pending') {
