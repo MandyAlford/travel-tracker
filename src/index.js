@@ -18,8 +18,8 @@ console.log('This is the JavaScript entry file - your code begins here.');
 const loginButton = $('#login-button')
 
 loginButton.on('click', (event) => {
-  const traveler = new Traveler({})
-  const agent = new Agent({})
+  const traveler = new Traveler({username: 'traveler50', password: 'travel2020'})
+  const agent = new Agent({username: 'agency', password: 'travel2020'})
   const username = $('#user-name').val()
   const password = $('#user-password').val()
 

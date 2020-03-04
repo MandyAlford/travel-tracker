@@ -2,11 +2,9 @@ import User from './user'
 import * as moment from 'moment';
 
 class Agent extends User {
-  constructor(allTravelers) {
-    super();
-    this.travelersInfo = allTravelers;
-    this.username = 'agency'
-    this.password = 'travel2020'
+  constructor(usersData) {
+    super(usersData);
+    this.travelersInfo = usersData.allTravelers;
   }
   getRevenue() {
     let totalTripsCost = this.travelersInfo.reduce((acc, traveler) => {

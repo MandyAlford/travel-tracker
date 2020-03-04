@@ -1,5 +1,7 @@
 class User {
-  constructor() {
+  constructor(usersData) {
+    this.username = usersData.username
+    this.password = usersData.password
   }
 
   verifyUser(username, password) {

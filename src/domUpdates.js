@@ -46,7 +46,7 @@ let domUpdates = {
           return this.instantiateTraveler(travelerData, tripsData, destinationsData)
         })
         this.displayAllPendingTrips(this.allTravelers);
-        const agent = new Agent(this.allTravelers)
+        const agent = new Agent({allTravelers: this.allTravelers})
         totalSpend.text(`$${Math.round(agent.getRevenue())}`);
         const todaysTravelerCount = agent.getTodaysTravelers();
         this.greetAgent(todaysTravelerCount);
